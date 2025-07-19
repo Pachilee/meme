@@ -1,0 +1,66 @@
+{% if error_message %}
+  <p>{{error_message}}</p>
+  {%endif%}
+  <!--showing movies for the categories -->
+{% for movie in movies %}
+<div class="col">
+<a href="{% url 'movie_detail' movie.id %}" class="text-decoration-none">
+<div class="card-object-to-fit" style="width: 18rem;">
+    <div class="card-body">
+      <img class="card-img-top border rounded" src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{%else%}https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019{%endif%}" class="card-img-top" alt="{{movie.title}}"></a>
+        <h6 class="card-title">{{movie.title|truncatechars:30}}</h6>
+        <p class="small object-fit">Rating: {{movie.vote_average|floatformat:1}}/10 <br>
+        Release Date: {{movie.release_date}} </p>    
+{% if user.is_authenticated %}
+{% if user_lists %}
+
+    <button class="btn btn-primary-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Add to List</button>
+    <ul class="dropdown-menu">
+{% for list in user_lists %}
+<li>
+  <form
+    hx-post="{% url 'add_to_list' list_id=list.id movie_id=movie.id movie_name=movie.title %}"
+    hx-trigger="click"
+    hx-target="#toast-container"
+    hx-swap="beforeend"
+    >
+    {% csrf_token %}
+    <button class="dropdown-item" type="submit">{{list.name}}</button>
+</form>
+</li>
+{%endfor%}
+<!--redirect users to profile users movie list-->
+<form method="get" action="{% url 'profile' %}">
+  <button class="btn"
+  >+ List</button>
+</form>
+</ul>
+
+{% endif %}
+{% endif %}
+    </div>
+</div>
+</a>
+</div>
+{% endfor %}
+
+<!--Endless scroll using HTMX-->
+{%if has_next%}
+<div id="scroll-trigger" 
+hx-get="{% url 'landing_page' %}?category={{category}}&search={{search_query}}&page={{next_page}}"
+hx-trigger="revealed"
+hx-swap="beforeend"
+hx-target="#movie-container"
+></div>
+{%endif%}
+
+
+  </div>
+</div>
+</a>
+</div>
+
+
+
+</div>

@@ -1,0 +1,100 @@
+{% extends "base.html" %}{% block content %}
+<div class="container mt-4">
+<div class="card mt-5 mb-3 px-40px border-0">
+    <h1 class="mt-5 .text-danger">{{movie.title}}</h1>
+    <h2 class="text-muted fw-light small">{{movie.year}}</h2>
+    <div class="row no-gutters justify-content-center">
+        <div class="col-md-4">
+            <img 
+            src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{%else%}https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019{%endif%}" 
+            class="card-img-top img-fluid rounded shadow-sm h-100 object-fit-auto w-auto" 
+            style="max-height: 500px;"            alt="{{movie.title}}"
+            />
+        </div>
+        <div class="col-md-8">
+            <p>{{movie.overview}}</p>
+            <h3>Genres</h3>
+            <ul class="list-inline">
+                {%for genre in movie.genres %}
+                <li class="list-inline-item">{{genre.name}}{% if not forloop.last %}, {%endif%}</li>
+                {%empty%}
+                <p class="text-muted">no genres provided</p>    
+                {%endfor%}
+            </ul>
+        
+<h3>Director(s)</h3>
+<ul class="list-inline"></ul>
+{%for member in credits.crew%}
+{% if member.job == "Director"%}
+<li class="list-inline-item">{{member.name}}{% if not forloop.last %}, {%endif%}</li>
+{%endif%}
+{%empty%}
+<p class="text-muted">No director information.</p>
+{%endfor%}
+    <ul class="list-inline">
+        <h3>Cast</h3>
+    {%for member in credits.cast|slice:":10" %}
+    <li class="list-inline-item">{{member.name}}{% if not forloop.last %}, {%endif%}</li>
+    {%empty%}
+<p class="text-muted">
+    No cast information provided</p>    
+    {%endfor%}
+</ul>
+<div class="row-flex">
+<div class="col-sm-">
+<p class="small object-fit">Rating: {{movie.vote_average|floatformat:1}}/10 <br></div> 
+    <div class="col-sm-"> <p class="small object-fit">Release Date: {{movie.release_date}} </p>    </div> 
+    <div class="col-sm-">
+<!--Adding movies to list -->
+{% if user.is_authenticated %}
+{% if user_lists %}
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Add to List</button>
+    <ul class="dropdown-menu">
+{% for list in user_lists %}
+<li>
+  <form
+    hx-post="{% url 'add_to_list' list_id=list.id movie_id=movie.id movie_name=movie.title %}"
+    hx-trigger="click"
+    hx-target="#toast-container"
+    hx-swap="beforeend"
+    >
+    {% csrf_token %}
+    <button class="dropdown-item" type="submit">{{list.name}}</button>
+</form>
+</li>
+{%endfor%}
+
+<!--redirect users to profile users movie list-->
+<form method="get" action="{% url 'profile' %}">
+  <button class="btn"
+  >+ List</button>
+</form>
+</ul>
+</div>
+{%else %}
+<p>you don't have any lists. </p>
+{% endif %}
+{% endif %}
+</div> 
+</div>
+</div>
+</div>
+</div>
+<div class="row .bg-dark">
+    <h5>Similar Movies</h5>
+    {% for name, poster, data in zipped_recommendations %}
+  <div class="col movie-card">
+      <a href="{% url 'movie_detail' data.id %}" class="text-decoration-none">
+          <img src="{{ poster }}" alt="{{ name }}" style="width: 150px; height: 225px;" />
+      </a>
+      <p>{{ name }}</p>
+  </div>
+{% endfor %}
+
+</div>
+</div>
+<div id="toast-container" class="position-fixed bottom-0 end-0 m-4">
+</div>
+{% endblock %}

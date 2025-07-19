@@ -1,0 +1,30 @@
+<!--renders movie data for user's movie list-->
+{% if movies %}
+{% for movie in movies %}
+  
+<div class="col-md">
+<div class="card" style="width: 18rem;" >
+   <!--only the owner can see the delete button-->
+    {%if is_owner %}
+    <!--triggers a modal to confirm deleting movie-->
+    <button class="position-absolute end-0 top-0 btn btn-danger opacity-50 m-1" data-bs-toggle="modal" data-bs-target="#delete-movie-modal-{{movie.id}}">X</button>
+    {% include "users/modals/_movie_delete_confirmation.html" %}
+    {%endif%}
+    <a href="{% url 'movie_detail' movie.id %}" class="text-decoration-none">
+        <img class="card-img-top" src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{%else%}https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019{%endif%}" class="card-img-top" alt="{{movie.title}}">
+      
+    <div class="card-body">
+      <h5 class="card-title">{{movie.title}}</h5>
+      <p class="card-text">{{movie.vote_average|floatformat:1}}/10</p>
+      <p class="card-text">{{movie.release_date}}</p>
+    </div>
+  </a> 
+</div>
+</div>
+{% endfor %}
+{%else %}
+<div class="position-absolute top-50 start-50">
+<p>This list is empty</p>
+<a class="btn btn-primary" href="/">Add more to list </a>
+</div>
+{%endif%}

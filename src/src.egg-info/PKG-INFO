@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: src
+Version: 0.1
+Summary: movie web app that recommends movies
+Author: PACHI LEE
+Author-email: pachimlee23@gmail.com
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Dynamic: author
+Dynamic: author-email
+Dynamic: description-content-type
+Dynamic: requires-python
+Dynamic: summary

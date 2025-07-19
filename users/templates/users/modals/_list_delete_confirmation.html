@@ -1,0 +1,25 @@
+<div class="modal" tabindex="-1" id="delete-list-modal-{{list.id}}" data-bs-backdrop="false">
+    <div class="modal-dialog" >
+      <div class="modal-content shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <h5 class="modal-title">Click to confirm to delete {{list.name|capfirst}} list </h5>
+           {%if movie%}
+            <form 
+            hx-post = "{% url 'delete_list' list.id %}"
+            hx-swap = "innerHTML"
+            hx-target = "#user-lists-container"
+            >
+            {%csrf_token%}
+            <button class="btn btn-danger mt-4" type="submit">Delete list</button>
+            <button type="button" class="btn btn-primary mt-4" data-bs-dismiss="modal"> Cancel </button>
+            </form>
+{%endif%}
+        
+        </div>
+      </div>
+    </div>
+  </div>

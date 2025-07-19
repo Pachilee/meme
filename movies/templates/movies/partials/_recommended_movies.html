@@ -1,0 +1,39 @@
+{% for name, poster, data in zipped_recommendations %}
+  <div class="col movie-card text-center mb-3">
+    <a href="{% url 'movie_detail' data.id %}" class="text-decoration-none">
+      <img src="{{ poster }}" alt="{{ name }}" style="width: 150px; height: 225px;" />
+      <p>{{ name|truncatechars:25 }}</p>
+    </a>
+    {% if user.is_authenticated %}
+{% if user_lists %}
+
+    <button class="btn btn-primary-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Add to List</button>
+    <ul class="dropdown-menu">
+{% for list in user_lists %}
+<li>
+  <form
+    hx-post="{% url 'add_to_list' list_id=list.id movie_id=data.id movie_name=data.title %}"
+    hx-trigger="click"
+    hx-target="#toast-container"
+    hx-swap="beforeend"
+    >
+    {% csrf_token %}
+    <button class="dropdown-item" type="submit">{{list.name}}</button>
+</form>
+</li>
+{%endfor%}
+
+<!--redirect users to profile users movie list-->
+<form method="get" action="{% url 'profile' %}">
+  <button class="btn"
+  >+ List</button>
+</form>
+</ul>
+
+{% endif %}
+{% endif %}
+  </div>
+{% empty %}
+  <p>No recommendations available.</p>
+{% endfor %}

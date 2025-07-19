@@ -1,0 +1,16 @@
+
+<!--use htmx post to show the new item added to the list. use
+csrf to protext from csrf attacks-->
+<div class="col-md-6">
+    <div class="card shadow-1g p-4">
+<form hx-post ="{% url 'create_list' %}"
+hx-target="#user-lists-container"
+hx-swap = "innerHTML"
+>
+{%csrf_token%}
+{{form}}
+<button class="btn btn-primary mt-2" type="submit">Create List</button>
+
+</form>
+</div>
+</div>

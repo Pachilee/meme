@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4"  data-bs-theme="dark">
+    
+<!--get the data and put it in the landing page then targeting the movie container-->
+    <form method="get" actioin="{% url 'landing_page' %}">
+    <select class="btn btn-secondary dropdown-toggle " name="category" hx-get="{% url 'landing_page'%}" hx-target="#movie-container" hx-swap="innerHTML" >
+        <option value= "popular" {% if category == 'popular' %} selected {%endif%}>Popular</option>
+        <option value= "now_playing" {% if category == 'now_playing' %} selected {%endif%}>Now Playing</option>
+        <option value= "top_rated" {% if category == 'top_rated' %} selected {%endif%}>Top Rated</option>
+        <option value= "upcoming" {% if category == 'upcoming' %} selected {%endif%}>Upcoming</option>
+    </select>
+</form>
+ <!--Seaarch form -->
+ <form method="get" hx-get="{% url 'landing_page' %}" hx-target="#movie-container" hx-swap="innerHTML" class="input-group w-50 mt-2" >
+    <input name="search" class="form-control" placeholder="enter a movie name">
+    <div id="input-group-append">
+        <button class="btn btn-light" type="submit">Search</button>
+    </div>
+</form>
+
+<div id="movie-container" class="row"  data-bs-theme="dark">
+     {% include "movies/partials/_movie_list.html" %}
+</div>
+</div>
+<div id="toast-container" class="position-fixed bottom-0 end-0 m-4"  data-bs-theme="dark"></div>
+
+{% endblock %}

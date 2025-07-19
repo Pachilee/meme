@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container min-vh-100 d-flex flex-column justify-content-center align-items-center ">
+
+  {% if user.is_authenticated %}
+
+  <!-- Trigger -->
+
+    <form method="get">
+    <button 
+      class="btn btn-primary mt-2 mb-3"
+      hx-get="{% url 'user_recommendation' %}"
+      hx-target="#recommendation-results"
+      hx-swap="innerHTML"
+      hx-trigger="click"
+    >
+    {%csrf_token%}
+      Generate Recommendations
+    </button>
+  </form>
+  
+
+  <!-- HTMX target area -->
+  <div id="recommendation-results" class="row pt-5 bg-body-tertiary">
+    {% include "movies/partials/_recommended_movies.html" %}
+  </div>
+  <p>Add more movies to list to get better recommendations</p>  
+
+  </div>
+    {%else%}
+    <p class="title-website">Welcome to même</p>
+    <h1 class="text-center" id="home-text">An AI Movie Recommender Website </h1>
+      
+   <h5> <a href="{% url 'register' %}" class="py-2"> Create</a> an account to get started
+   </h5>
+{%endif%}
+
+{% endblock %}

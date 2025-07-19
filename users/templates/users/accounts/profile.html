@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{%  block content %}
+
+<div class="container min-vh-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="text-center">
+<h1 class="text-primary">Hello {{user.username|capfirst}}</h1>
+<p>These are your customized lists. Add more movies to list to create better movie recommendations</p>
+</div>
+<!--add the name of list of movies to profile page-->
+<div class="mt-4 d-inline-block " id="user-lists-container">
+{% include 'users/lists/partials/_user_lists.html'%}
+</div>
+</div>
+
+
+{%endblock%}

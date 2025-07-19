@@ -1,0 +1,16 @@
+<!--toggle modal message to confirm adding to list -->
+<ul class="list-group">
+    {% for list in user_lists %}
+    <li class="list-group-item d-flex"><a href="{% url 'list_detail' list_id=list.id %}">{{list.name}}</a>
+    <button class="btn" type="submit" data-bs-toggle="modal" data-bs-target="#delete-list-modal-{{list.id}}">X</button>
+    </li>
+    {% include "users/modals/_list_delete_confirmation.html"%}
+    {% endfor %}
+</ul>
+<button
+hx-get = "{% url 'create_list' %}"
+hx-swap = "innerHTML"
+hx-target = "#create-form-container"
+class="btn"
+>+ List</button>
+<div id="create-form-container"></div>
